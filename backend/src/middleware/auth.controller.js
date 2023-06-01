@@ -1,8 +1,8 @@
-const { sequelize } = require("../connection"); 
+const { sequelize } = require("../connection");
 const jwt = require("jsonwebtoken");
 
 const auth = async function (req, res, next) {
-    console.log(req.headers.authorization)
+  console.log(req.headers.authorization)
   if (!req.headers.authorization) {
     res.json({
       success: false,
@@ -23,7 +23,7 @@ const auth = async function (req, res, next) {
 
       res.locals.userId = user.id;
 
-      next(); 
+      next();
     } else {
       res.json({
         success: false,

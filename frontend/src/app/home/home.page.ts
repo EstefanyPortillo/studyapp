@@ -10,13 +10,13 @@ import { DataService, Message } from '../services/data.service';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage implements OnInit{
+export class HomePage implements OnInit {
   private data = inject(DataService);
 
-  usuarios : any = [];
+  usuarios: any = [];
 
   constructor() {
-    
+
   }
 
   refresh(ev: any) {
@@ -28,31 +28,33 @@ export class HomePage implements OnInit{
   getMessages(): Message[] {
     return this.data.getMessages();
   }
-  
-  ionViewWillEnter(): void {
+
+  ngOnInit(): void { //al cargar pantalla
     this.getUsers();
   }
 
-  ngOnInit(): void {
-    //this.getUsers();
-  }
+  getUsers() {
+    //localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ28iOjEsIm5hbWUiOiJFc3RlZnkiLCJsYXN0X25hbWUiOiJQb3J0aWxsbyIsImVtYWlsIjoiYWVwYWVzdGVAZ21haWwuY29tIiwiYXZhdGFyIjpudWxsLCJpYXQiOjE2ODU1Nzc1NjF9.KLd7dfzmJDXf2kxm8BTj_ZFyafNpCr13uTFS9Iddgyc')
 
-  getUsers () {
     axios.get("http://localhost:3000/users/list"
-, {
-      headers: {
-        'Authorization': localStorage.getItem("token") 
-      },
-    })
-    .then( result => {
-      if (result.data.success == true) {
-        this.usuarios = result.data.usuarios;
-      } else {
-        console.log(result.data.error);
-      }
-      
-    }).catch(error => {
-      console.log(error.message);
-    })
+      , {
+
+        headers: {
+          'Authorization': localStorage.getItem("token")
+
+        },
+      })
+      .then(result => {
+        if (result.data.success == true) {
+          this.usuarios = result.data.usuarios;
+          console.log(this.usuarios);
+
+        } else {
+          console.log(result.data.error);
+        }
+
+      }).catch(error => {
+        console.log(error.message);
+      })
   }
 }
