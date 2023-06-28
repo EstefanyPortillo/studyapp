@@ -1,120 +1,93 @@
-const { sequelize } = require("../../connection");
-const { TopicsModel } = require("../../model/topics.model");
-const TopicsService = require("../../service/topics.service");
-
-///cuando se trata de listar es mejor usar SQL puro por cuestion de tiempo
-const listar = async function (req, res) {
-
+const {sequelize} = require("../../connection");
+const {TopicsModel}= require("../../model/topic.model");
+const TopicService= require("../../service/topic.service")
+const listar = async function(req, res) {
     console.log("listar topicos");
-
     try {
-        const topics = await TopicsService.listar(req.query.filtro || '');
-
-        if (topics) {
-            // en users[0] se encuentra el listado de lo que se recupera desde el sql
+        const topics = await TopicService.listar(req.query.filtro || '');
+        // EN topics[0] SE ENCUENTRA NUESTRO LISTADO DE SQL
+        if(topics && topics[0]){
             res.json({
-                success: true,
-                topicos: topics[0]
+                success:true,
+                topics: topics[0]
             });
-
-        } else {
+        }else{
             res.json({
-                success: true,
-                topicos: []
+                success:true,
+                topics: []
             });
-
+        }
+    } catch (error) {
+        res.json({
+            success:false,
+            error: error.message
+        });
+    }  
+};
+const consultarPorCodigo = async function(req, res) {
+    console.log("consultar Topics por codigo");
+    try {
+        const topics = await TopicService.consultarPorCodigo(req.params.id);
+        
+        // EN topics[0] SE ENCUENTRA NUESTRO LISTADO DE SQL
+        if(topics){
+            res.json({
+                success:true,
+                topics: topics
+            });
+        }else{
+            res.json({
+                success:true,
+                topics: []
+            });
         }
     } catch (error) {
         console.log(error);
         res.json({
-            success: false,
+            success:false,
             error: error.message
         });
-
     }
-
-};
-
-const consultarPorCodigo = async function (req, res) {
-    console.log("consultar 1 topico por codigo");
-
-    try {
-        const topicsModelResult = await TopicsService.consultarPorCodigo(req.params.id);
-
-        if (topicsModelResult) {
-            res.json({
-                success: true,
-                topicos: topicsModelResult
-            });
-
-        } else {
-            res.json({
-                success: true,
-                topicos: null
-            });
-
-        }
-    } catch (error) {
-        console.log(error);
-        res.json({
-            success: false,
-            error: error.message
-        });
-
-    }
-
-};
-
-const actualizar = async function (req, res) {
-    console.log("actualizar topicos");
     
-    let topicoRetorno = null; //guarda el topico que se va incluir o editar;
+      
+};
+
+const actualizar = async function(req, res) {
+    let topicsRetorno=null; //GUARDARA EL TOPICO QUE SE VA A INCLUIR O EDITAR
+    const data =req.body; // SE OBTIENE LOS DATOS DEL CUERPO DE LA PETICION
 
     try {
-        let topicoRetorno = await TopicsService.actualizar(
-        req.body.id,
-        req.body.create_date,
-        req.body.name,
-        req.body.topic_id,
-        req.body.order,
-        req.body.priority,
-        req.body.color,
-        req.body.owner_user_id
-        );
+        
+        topicsRetorno = await TopicService.actualizar(data);
        
         res.json({
             success: true,
-            topics: topicoRetorno
+            topics: topicsRetorno
         });
     } catch (error) {
-        console.log(error);
         res.json({
-            success: false,
+            success:false,
             error: error.message
         });
     }
 };
 
-const eliminar = async function (req, res) {
-    console.log("eliminar topicos");
-
+const eliminar = async function( req, res) {
+    console. log( "eliminar topics") ;
     try {
-        const topicoRetorno = await TopicsService.eliminar(req.params.id);
+        await TopicService.eliminar(req.params.id)
         res.json({
-            success: topicoRetorno,
+            success: true
         });
-
     } catch (error) {
-        console.log(error);
         res.json({
             success: false,
             error: error.message
         });
-
-
     }
+    
 };
 
 module.exports = {
-    listar, consultarPorCodigo, actualizar, eliminar
+    listar, actualizar, eliminar, consultarPorCodigo
 };
