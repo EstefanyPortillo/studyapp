@@ -1,94 +1,91 @@
+
 const { sequelize } = require("../connection");
-const { ThemesPropertiesModel } = require("../model/themes_properties.model");
+const { ThemePropertiesModel } = require("../model/theme_properties.model");
 
-///cuando se trata de listar es mejor usar SQL puro por cuestion de tiempo
 const listar = async function (textoBuscar) {
+  console.log("listar themes properties service");
 
-    console.log("listar temas/propiedades");
-
-    try {
-        const themes_properties = await sequelize.query(`SELECT *
-        FROM themes_properties
+  try {
+    const theme_properties = await sequelize.query(
+      `SELECT * FROM themes_properties 
         WHERE 1=1
-        AND UPPER (property_name) LIKE UPPER ('%${textoBuscar}%')
-        ORDER BY id`);
+          AND property_name LIKE '%${textoBuscar}%'
+      ORDER BY id`
+    );
 
-        if (themes_properties && themes_properties[0]) {
-            return themes_properties[0];
-        } else {
-            return [];
-        }
+    if (theme_properties) {
+      
+      return theme_properties[0];
 
-    } catch (error) {
-        console.log(error);
-        throw error;
+    } else {
+      return [];
     }
-
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 };
 
 const consultarPorCodigo = async function (id) {
+  console.log("Buscar theme properties service");
 
-    console.log("consultar 1 tema/propiedad por codigo");
+  try {
 
-    try {
-        const themes_propertiesModelResult = await ThemesPropertiesModel.findByPk(id);
+    const ThemePropertiesModelResult = await ThemePropertiesModel.findByPk(id);
 
-        if (themes_propertiesModelResult) {
-            return themes_propertiesModelResult;
-
-        } else {
-            return null;
-        }
-    } catch (error) {
-        console.log(error);
-        throw error;
+    if (ThemePropertiesModelResult) {
+      
+      return ThemePropertiesModelResult;
+    } else {
+      return []
     }
-
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 };
 
-const actualizar = async function (
-    id,
-    theme_id,
-    property_name,
-    property_value
-) {
-    console.log("actualizar temas propiedades");
-    let tema_propiedadRetorno = null; //guarda el tema que se va incluir o editar;
-    const data = {
-    id,
-    theme_id,
-    property_name,
-    property_value}; //se obtiene los datos del cuerpo de la peticion
-
-    try {
-        let tema_propiedadExiste = null;
-        if (id) {
-            tema_propiedadExiste = await ThemesPropertiesModel.findByPk(id);
-        }
-        if (tema_propiedadExiste) {
-            tema_propiedadRetorno = await ThemesPropertiesModel.update(data, { where: { id: id } });
-            tema_propiedadRetorno = data;
-        } else {
-            tema_propiedadRetorno = await ThemesPropertiesModel.create(data);
-        }
-        return tema_propiedadRetorno;
-    } catch (error) {
-        console.log(error);
-        throw error;
+const actualizar = async function (data) {
+  console.log("actualizar themes properties service");
+  let themePropertyRetorno = null;
+  let tmsExiste = null;
+  const id = data.id;
+  try {
+    if (id) {
+      tmsExiste = await ThemePropertiesModel.findByPk(id);
     }
-}; 
-//eliminar
+    if (tmsExiste) {
+      
+      themePropertyRetorno = await ThemePropertiesModel.update(data, { where: { id: id } });
+
+    } else {
+
+      themePropertyRetorno = await ThemePropertiesModel.create(data);
+    }
+
+    return themePropertyRetorno;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 const eliminar = async function (id) {
-    console.log("eliminar temas propiedades");
+  console.log("eliminar themes properties service");
 
-    try {
-        await ThemesPropertiesModel.destroy({ where: { id: id } });
-        return true;
-    } catch (error) {
-        console.log(error);
-        throw error;
-    }
-}; 
+  try {
+    await ThemePropertiesModel.destroy( { where: { id: id } });
+
+    return true;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 module.exports = {
-    listar, consultarPorCodigo, actualizar, eliminar
+  listar,
+  actualizar,
+  eliminar,
+  consultarPorCodigo
 };

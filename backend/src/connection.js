@@ -1,23 +1,19 @@
-const {Sequelize} = require("sequelize");
-
-const sequelize = new Sequelize("db_study_app", 'postgres', '5703163a', {
-    host : 'localhost',
-    port : 5432  ,
-    dialect : 'postgres'
+const Sequelize = require('sequelize');
+const sequelize = new Sequelize("db_study_app",'postgres','5703163a',{
+    host: 'localhost',
+    port:  5432,
+    dialect: 'postgres'
 });
-
-const testConnection = function() {
+const testConnection= function(){
     try {
         sequelize.authenticate();
-        console.log("Conectado con Exito!!!");
+        console.log('Conexion Exitosa');
     } catch (error) {
-        console.log("Error de conexion", error);
+        console.log('Error de conexion:',error);
     }
 }
-
 testConnection();
-
-module.exports = {
+module.exports={
     Sequelize,
     sequelize
 }

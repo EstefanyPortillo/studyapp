@@ -1,21 +1,20 @@
 {
   "name": "study-app",
   "version": "1.0.0",
-  "description": "Organizacion para contenidos de estudios por topicos",
+  "description": "Organizacion de contenidos por topicos",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "./node_modules/.bin/nodemon index.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "facultad",
     "contenido",
     "semestres"
   ],
-  "author": "Marcos JAra",
+  "author": "Alejandro Lezcano",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.20.1",
+    "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
